@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<link rel="icon" id="fav" href="assets/kantongajaib.png" data-fb="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 170%22%3E%3Crect width=%22170%22 height=%22170%22 rx=%2236%22 fill=%22%23047857%22/%3E%3Cg transform=%22translate(-460,-40)%22%3E%3Cpolygon points=%22529,142 561,142 566,156 524,156%22 fill=%22%23FFFFFF%22/%3E%3Cpolygon points=%22529,142 524,128 540,140%22 fill=%22%23FFFFFF%22/%3E%3Cpolygon points=%22561,142 566,128 550,140%22 fill=%22%23FFFFFF%22/%3E%3Cellipse cx=%22545%22 cy=%22170%22 rx=%2235%22 ry=%2229%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%22523%22 y=%22146%22 width=%2244%22 height=%228%22 rx=%224%22 fill=%22%23065F46%22/%3E%3Ccircle cx=%22527%22 cy=%2296%22 r=%2213%22 fill=%22%23FBBF24%22/%3E%3Ccircle cx=%22527%22 cy=%2296%22 r=%228%22 fill=%22none%22 stroke=%22%23B45309%22 stroke-width=%222%22/%3E%3Ccircle cx=%22561%22 cy=%2278%22 r=%2210%22 fill=%22%23FBBF24%22/%3E%3Ccircle cx=%22561%22 cy=%2278%22 r=%226%22 fill=%22none%22 stroke=%22%23B45309%22 stroke-width=%222%22/%3E%3Ccircle cx=%22588%22 cy=%22108%22 r=%2211%22 fill=%22%23FBBF24%22/%3E%3Ccircle cx=%22588%22 cy=%22108%22 r=%226.5%22 fill=%22none%22 stroke=%22%23B45309%22 stroke-width=%222%22/%3E%3Cpath d=%22M600 60 L603 68 L611 71 L603 74 L600 82 L597 74 L589 71 L597 68 Z%22 fill=%22%23FDE68A%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="assets/kantongajaib.png">
+<meta name="theme-color" content="#050B16">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kantong Ajaib – Catatan Keuangan</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Manrope:wght@400;600;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div id="auth">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="acard" id="aform">
+    <div class="alogo"><span class="logo mk"><img src="assets/kantongajaib.png" alt="Logo Kantong Ajaib" onerror="if(!this.dataset.t){this.dataset.t=1;this.parentNode.classList.add('raw');this.src='assets/images.png'}else{this.parentNode.classList.remove('raw');this.parentNode.classList.add('nofile');this.remove()}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" role="img" aria-label="Logo Kantong Ajaib"><rect width="170" height="170" rx="36" fill="#047857"/><g transform="translate(-460,-40)"><polygon points="529,142 561,142 566,156 524,156" fill="#FFFFFF"/><polygon points="529,142 524,128 540,140" fill="#FFFFFF"/><polygon points="561,142 566,128 550,140" fill="#FFFFFF"/><ellipse cx="545" cy="170" rx="35" ry="29" fill="#FFFFFF"/><rect x="523" y="146" width="44" height="8" rx="4" fill="#065F46"/><circle cx="527" cy="96" r="13" fill="#FBBF24"/><circle cx="527" cy="96" r="8" fill="none" stroke="#B45309" stroke-width="2"/><circle cx="561" cy="78" r="10" fill="#FBBF24"/><circle cx="561" cy="78" r="6" fill="none" stroke="#B45309" stroke-width="2"/><circle cx="588" cy="108" r="11" fill="#FBBF24"/><circle cx="588" cy="108" r="6.5" fill="none" stroke="#B45309" stroke-width="2"/><path d="M600 60 L603 68 L611 71 L603 74 L600 82 L597 74 L589 71 L597 68 Z" fill="#FDE68A"/></g></svg></span></div>
+    <h1>KANTONG AJAIB<small class="ver">v10.6</small></h1>
+    <p class="asub">Catat uang, atur belanja, wujudkan barang impian.</p>
+    <div class="tabs"><button type="button" id="tLogin" class="on">Masuk</button><button type="button" id="tReg">Daftar</button><i id="tInd"></i></div>
+    <label>Nama pengguna<input id="uName" autocomplete="username" placeholder="mis. budi"></label>
+    <label>Sandi / PIN<input id="uPass" type="password" autocomplete="current-password" placeholder="minimal 4 karakter"></label>
+    <label id="lPass2" hidden>Ulangi sandi<input id="uPass2" type="password" autocomplete="new-password"></label>
+    <div class="aerr" id="aerr" role="alert"></div>
+    <button class="btn" id="aGo" type="button">Masuk</button>
+    <p class="anote">Akun dan datamu disimpan di browser ini saja, tidak dikirim ke server mana pun.</p>
+  </div>
+</div>
+<div class="wrap" id="app" hidden>
+<header>
+  <h1><span class="logo mk"><img src="assets/kantongajaib.png" alt="Logo Kantong Ajaib" onerror="if(!this.dataset.t){this.dataset.t=1;this.parentNode.classList.add('raw');this.src='assets/images.png'}else{this.parentNode.classList.remove('raw');this.parentNode.classList.add('nofile');this.remove()}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" role="img" aria-label="Logo Kantong Ajaib"><rect width="170" height="170" rx="36" fill="#047857"/><g transform="translate(-460,-40)"><polygon points="529,142 561,142 566,156 524,156" fill="#FFFFFF"/><polygon points="529,142 524,128 540,140" fill="#FFFFFF"/><polygon points="561,142 566,128 550,140" fill="#FFFFFF"/><ellipse cx="545" cy="170" rx="35" ry="29" fill="#FFFFFF"/><rect x="523" y="146" width="44" height="8" rx="4" fill="#065F46"/><circle cx="527" cy="96" r="13" fill="#FBBF24"/><circle cx="527" cy="96" r="8" fill="none" stroke="#B45309" stroke-width="2"/><circle cx="561" cy="78" r="10" fill="#FBBF24"/><circle cx="561" cy="78" r="6" fill="none" stroke="#B45309" stroke-width="2"/><circle cx="588" cy="108" r="11" fill="#FBBF24"/><circle cx="588" cy="108" r="6.5" fill="none" stroke="#B45309" stroke-width="2"/><path d="M600 60 L603 68 L611 71 L603 74 L600 82 L597 74 L589 71 L597 68 Z" fill="#FDE68A"/></g></svg></span>KANTONG AJAIB</h1>
+  <div class="tools">
+    <input type="month" id="bulan" aria-label="Pilih bulan">
+    <button class="ghost" id="eye" type="button" aria-label="Sembunyikan saldo">👁</button><button class="ghost" id="pal" type="button">🔎 Ctrl+K</button><button class="ghost" id="theme" aria-label="Ganti tema terang/gelap">🌓</button>
+    <span class="user" id="who"></span><button class="ghost" id="logout">Keluar</button>
+    <button class="ghost" id="bk">Cadangan</button><button class="ghost" id="rs">Pulihkan</button><input type="file" id="file" accept=".json" hidden>
+    <button class="ghost" id="csv">Unduh CSV</button>
+  </div>
+</header>
+<nav class="tabbar" id="tabbar"><button class="on" data-v="dash">🏠 Dasbor</button><button data-v="bud">🎯 Anggaran</button><button data-v="rec">🔁 Berulang &amp; Transfer</button><button data-v="debt">🤝 Utang</button><button data-v="rep">📊 Laporan</button><div class="sw" id="side"></div><i id="tbInd"></i></nav>
+<div class="view" id="v-dash">
+
+<section class="hero">
+  <div><small id="hi">Total saldo</small><div class="big" id="saldo">Rp0</div></div>
+  <div class="free"><small>Saldo bebas (di luar tabungan target)</small><div class="big" id="bebas">Rp0</div></div>
+<div id="spark" class="spark"></div></section>
+
+<div class="wallets" id="wallets"></div>
+
+<section class="stats">
+  <div class="stat"><small>Pemasukan bulan ini</small><b class="in" id="sIn">Rp0</b></div>
+  <div class="stat"><small>Pengeluaran bulan ini</small><b class="out" id="sOut">Rp0</b></div>
+</section>
+
+<div class="welcome" id="welcome" hidden><div class="wt"><b>👋 Selamat datang di Kantong Ajaib!</b><p>Mulai dari nol, atau coba dulu dengan data contoh supaya semua grafik, target, dan fitur langsung terlihat hidup.</p></div><button class="btn" id="demoBtn" type="button">✨ Muat data contoh</button><button class="ghost" id="skipBtn" type="button">Mulai kosong</button></div>
+<div class="insights" id="insights"></div>
+<div class="card">
+  <div class="bhead"><h2>Batas pengeluaran bulanan</h2><div class="bset"><input id="budget" inputmode="numeric" placeholder="Batas (Rp)" aria-label="Batas pengeluaran"><button class="ghost" id="bSave">Atur</button></div></div>
+  <div class="bar"><i id="bBar" class="ok"></i></div>
+  <div class="bnote" id="bTxt"></div><div class="bnote" id="insight"></div>
+</div>
+<div class="grid">
+  <div>
+    <div class="card">
+      <h2>Catat transaksi</h2>
+      <div class="seg">
+        <button class="on o" id="tOut" type="button">Pengeluaran</button>
+        <button id="tIn" type="button">Pemasukan</button>
+      </div>
+      <div class="row2">
+        <input id="amt" inputmode="numeric" placeholder="Nominal (Rp)" aria-label="Nominal">
+        <select id="cat" aria-label="Kategori"></select>
+      </div>
+      <div class="row2">
+        <input id="note" placeholder="Catatan (opsional)" aria-label="Catatan">
+        <input id="date" type="date" aria-label="Tanggal">
+      </div>
+      <div class="row2"><select id="wal" aria-label="Dompet"></select><button class="ghost" id="wAdd" type="button">+ Dompet baru</button></div>
+      <div class="chips" id="chips"></div>
+      <div class="row2"><button class="ghost" id="catAdd" type="button">＋ Kategori baru</button><button class="ghost" id="catDel" type="button">🗑 Hapus kategori</button></div>
+      <button class="btn" id="add">Simpan transaksi</button>
+    </div>
+    <div class="card">
+      <h2>Riwayat bulan ini</h2>
+      <div class="row2"><input id="q" placeholder="Cari transaksi..." aria-label="Cari"><select id="f" aria-label="Filter"><option value="all">Semua</option><option value="in">Pemasukan</option><option value="out">Pengeluaran</option></select></div>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>Target belanja</h2>
+      <div class="row2">
+        <input id="gName" placeholder="Mau beli apa?" aria-label="Nama barang">
+        <input id="gTarget" inputmode="numeric" placeholder="Harga (Rp)" aria-label="Harga target">
+      </div>
+      <button class="btn" id="gAdd">Tambah target</button>
+      <div id="goals" style="margin-top:14px"></div>
+    </div>
+    <div class="card">
+      <h2>Pengeluaran per kategori</h2>
+      <div id="cats"></div>
+    </div>
+    <div class="card">
+      <h2>Tren 6 bulan</h2>
+      <div id="trend"></div>
+    </div>
+    <div class="card">
+      <h2>Pencapaian <span class="pill" id="bcount"></span></h2>
+      <div class="badges" id="badges"></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="view" id="v-bud" hidden>
+  <div class="card"><div class="bhead"><h2>Anggaran per kategori</h2><button class="ghost" id="auto" type="button">✨ Isi otomatis 50/30/20</button></div>
+  <div class="bnote" id="budSum"></div><div id="budList"></div></div>
+</div>
+<div class="view" id="v-rec" hidden><div class="grid"><div>
+  <div class="card"><h2>Transaksi berulang</h2>
+    <div class="seg"><button class="on o" id="rOut" type="button">Pengeluaran</button><button id="rIn" type="button">Pemasukan</button></div>
+    <div class="row2"><input id="rAmt" inputmode="numeric" placeholder="Nominal (Rp)" aria-label="Nominal"><input id="rNote" placeholder="Nama (mis. Gaji, Listrik)" aria-label="Nama"></div>
+    <div class="row2"><select id="rCat" aria-label="Kategori"></select><input id="rDay" type="number" min="1" max="31" placeholder="Tanggal tiap bulan" aria-label="Tanggal"></div>
+    <div class="row2"><select id="rWal" aria-label="Dompet"></select><span></span></div>
+    <button class="btn" id="rAdd" type="button">Tambah jadwal</button><div id="recList" style="margin-top:12px"></div></div>
+</div><div>
+  <div class="card"><h2>Transfer antar dompet</h2>
+    <div class="row2"><select id="tFrom" aria-label="Dari"></select><select id="tTo" aria-label="Ke"></select></div>
+    <div class="row2"><input id="tAmt" inputmode="numeric" placeholder="Nominal (Rp)" aria-label="Nominal"><input id="tDate" type="date" aria-label="Tanggal"></div>
+    <button class="btn" id="tAdd" type="button">Transfer</button><div id="tfList" style="margin-top:12px"></div></div>
+</div></div></div>
+<div class="view" id="v-debt" hidden><div class="grid">
+  <div class="card"><h2>Catat utang / piutang</h2>
+    <div class="seg"><button class="on o" id="dU" type="button">Utang saya</button><button id="dP" type="button">Piutang</button></div>
+    <div class="row2"><input id="dWho" placeholder="Nama orang" aria-label="Nama"><input id="dAmt" inputmode="numeric" placeholder="Nominal (Rp)" aria-label="Nominal"></div>
+    <div class="row2"><input id="dDue" type="date" aria-label="Jatuh tempo"><input id="dNote" placeholder="Catatan" aria-label="Catatan"></div>
+    <button class="btn" id="dAdd" type="button">Simpan</button></div>
+  <div><div class="stats"><div class="stat"><small>Utang saya</small><b class="out" id="sU">Rp0</b></div><div class="stat"><small>Piutang</small><b class="in" id="sP">Rp0</b></div></div>
+  <div class="card"><h2>Daftar</h2><div id="debtList"></div></div></div>
+</div></div>
+<div class="view" id="v-rep" hidden><div class="grid"><div>
+  <div class="card"><h2>Skor kesehatan keuangan</h2><div class="donutwrap"><svg viewBox="0 0 42 42" class="donut" id="ring" role="img" aria-label="Skor"></svg><div class="leg" id="scoreTxt"></div></div></div>
+  <div class="card"><h2>Kalender pengeluaran</h2><div id="heat"></div></div>
+  <div class="card"><h2>Arus kas tahun ini</h2><div class="flow" id="flow"></div></div>
+</div><div>
+  <div class="card"><h2>Ringkasan bulan ini</h2><div class="kpis" id="kpis"></div></div>
+  <div class="card"><div class="bhead"><h2>Rekap tahunan</h2><button class="ghost" id="print" type="button">🖨 Cetak</button></div><div id="yearTbl"></div></div>
+</div></div></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
