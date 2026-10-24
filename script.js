@@ -158,6 +158,21 @@ function enter(n,name){
 }
 $('tLogin').onclick=()=>setMode('login');$('tReg').onclick=()=>setMode('reg');$('aGo').onclick=go;
 ['uName','uPass','uPass2'].forEach(i=>$(i).addEventListener('keydown',e=>{if(e.key==='Enter')go()}));
+$('chpw').onclick=async()=>{
+  const n=KEY.slice(BASE.length+1),U=getU();
+  if(!U[n]){toast('Akun tidak ditemukan');return}
+  const r=await ask('Ganti sandi',[{label:'Sandi lama',pw:1},{label:'Sandi baru (minimal 4 karakter)',pw:1},{label:'Ulangi sandi baru',pw:1}]);
+  if(!r)return;
+  const [o,p,p2]=r;
+  if(!o||!p){toast('Isi semua kolom');return}
+  if(await hash(o,U[n].salt)!==U[n].h){toast('Sandi lama salah');return}
+  if(p.length<4){toast('Sandi baru minimal 4 karakter');return}
+  if(p!==p2){toast('Ulangi sandi baru tidak sama');return}
+  if(p===o){toast('Sandi baru harus berbeda dari yang lama');return}
+  for(const k in U){if(k!==n&&await hash(p,U[k].salt)===U[k].h){toast('Sandi ini sudah dipakai akun lain, pilih yang berbeda');return}}
+  const salt=Math.random().toString(36).slice(2);U[n].salt=salt;U[n].h=await hash(p,salt);
+  try{localStorage.setItem(UK,JSON.stringify(U))}catch(e){toast('Gagal menyimpan sandi');return}
+  toast('Sandi berhasil diganti')};
 $('logout').onclick=()=>{try{sessionStorage.removeItem('dompetku-user')}catch(e){}$('app').hidden=true;const a=$('auth');a.hidden=false;a.classList.remove('leave');setMode('login');$('uName').value='';$('uPass').focus()};
 function burst(el,em,up){if(calm())return;const r=el.getBoundingClientRect();for(let i=0;i<14;i++){const e=document.createElement('i');e.className='bst';e.textContent=em;e.style.cssText=`left:${r.left+r.width/2}px;top:${r.top}px;--dx:${(Math.random()-.5)*260}px;--dy:${(up?-1:1)*(80+Math.random()*140)}px;animation-delay:${Math.random()*.15}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),1500)}}
 document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('.btn,.ghost,.seg button,.chips button,.goal .act button,.tabs button');if(!b||calm())return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2,x=document.createElement('span');x.className='rip';x.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),650)});
@@ -249,7 +264,7 @@ $('print').onclick=()=>window.print();
 
 
 function ask(title,fields){return new Promise(res=>{const m=document.createElement('div');m.className='mdl';
-  m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2>${fields.map((f,i)=>`<label>${esc(f.label)}<input data-i="${i}" value="${esc(f.val||'')}" ${f.num?'inputmode="numeric"':''}></label>`).join('')}<div class="mact"><button class="ghost" data-a="0">Batal</button><button class="btn" data-a="1">Simpan</button></div></div>`;
+  m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2>${fields.map((f,i)=>`<label>${esc(f.label)}<input data-i="${i}" value="${esc(f.val||'')}" ${f.num?'inputmode="numeric"':''} ${f.pw?'type="password" autocomplete="off"':''}></label>`).join('')}<div class="mact"><button class="ghost" data-a="0">Batal</button><button class="btn" data-a="1">Simpan</button></div></div>`;
   document.body.appendChild(m);const ins=[...m.querySelectorAll('input')];
   ins.forEach((e,i)=>{if(fields[i].num)e.addEventListener('input',()=>fmtIn(e));e.addEventListener('keydown',ev=>{if(ev.key==='Enter')done(1);if(ev.key==='Escape')done(0)})});ins[0].focus();
   function done(ok){const r=ok?ins.map(e=>e.value.trim()):null;m.remove();res(r)}
@@ -290,7 +305,7 @@ function renderBadges(){const m=curM(),mt=S.tx.filter(t=>t.date.startsWith(m)),c
   const xp=S.tx.length*10+S.goals.length*25+S.badges.length*50+st*5,lv=Math.floor(Math.sqrt(xp/25))+1,lo=25*(lv-1)**2,hi=25*lv*lv,T=['Pemula','Penabung Muda','Pengatur Uang','Juragan','Sultan','Legenda'];
   $('lvl').innerHTML=`<div class="lv"><span class="lb">${lv}</span><div><b>${T[Math.min(lv-1,5)]}</b><small>${xp} XP · ${hi-xp} XP lagi ke level ${lv+1}</small></div></div><div class="bar"><i class="ok" data-w="${(xp-lo)/(hi-lo)*100}"></i></div>`}
 function palette(){if(document.querySelector('.pal'))return;
-  const acts=[['🏠','Buka Dasbor',()=>showView('dash')],['🎯','Buka Anggaran',()=>showView('bud')],['🔁','Buka Berulang & Transfer',()=>showView('rec')],['🤝','Buka Utang',()=>showView('debt')],['📊','Buka Laporan',()=>showView('rep')],['➖','Catat pengeluaran',()=>{showView('dash');setType('out');$('amt').focus()}],['➕','Catat pemasukan',()=>{showView('dash');setType('in');$('amt').focus()}],['🎁','Tambah target belanja',()=>{showView('dash');$('gName').focus()}],['🌓','Ganti tema',()=>$('theme').click()],['💾','Cadangkan data',()=>$('bk').click()],['📄','Unduh CSV',()=>$('csv').click()],['🧪','Muat data contoh',()=>S.tx.length?toast('Data contoh hanya untuk akun yang masih kosong'):loadDemo()],['🚪','Keluar',()=>$('logout').click()]];
+  const acts=[['🏠','Buka Dasbor',()=>showView('dash')],['🎯','Buka Anggaran',()=>showView('bud')],['🔁','Buka Berulang & Transfer',()=>showView('rec')],['🤝','Buka Utang',()=>showView('debt')],['📊','Buka Laporan',()=>showView('rep')],['➖','Catat pengeluaran',()=>{showView('dash');setType('out');$('amt').focus()}],['➕','Catat pemasukan',()=>{showView('dash');setType('in');$('amt').focus()}],['🎁','Tambah target belanja',()=>{showView('dash');$('gName').focus()}],['🌓','Ganti tema',()=>$('theme').click()],['💾','Cadangkan data',()=>$('bk').click()],['📄','Unduh CSV',()=>$('csv').click()],['🧪','Muat data contoh',()=>S.tx.length?toast('Data contoh hanya untuk akun yang masih kosong'):loadDemo()],['🔑','Ganti sandi',()=>$('chpw').click()],['🚪','Keluar',()=>$('logout').click()]];
   const m=document.createElement('div');m.className='mdl pal';m.innerHTML='<div class="mbox pbox"><input id="pq" placeholder="Ketik perintah atau cari transaksi…" aria-label="Palet perintah"><div id="pl"></div><small class="phint">↑↓ pilih · Enter jalankan · Esc tutup</small></div>';
   document.body.appendChild(m);const q=m.querySelector('#pq'),pl=m.querySelector('#pl');let sel=0,cur=[];
   const draw=()=>{const k=q.value.toLowerCase().trim();cur=acts.filter(a=>a[1].toLowerCase().includes(k));
