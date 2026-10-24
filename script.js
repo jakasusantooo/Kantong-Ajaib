@@ -123,20 +123,28 @@ const UK='dompetku-users';
 const getU=()=>{try{return JSON.parse(localStorage.getItem(UK))||{}}catch(e){return{}}};
 async function hash(p,salt){const s=salt+':'+p;try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=5381;for(const c of s)h=(h*33^c.charCodeAt(0))>>>0;return 'x'+h}}
 let mode='login';
-function setMode(m){mode=m;$('tLogin').classList.toggle('on',m==='login');$('tReg').classList.toggle('on',m==='reg');$('tInd').style.transform=m==='reg'?'translateX(100%)':'none';$('lPass2').hidden=m==='login';$('aGo').textContent=m==='login'?'Masuk':'Buat akun';$('aerr').textContent='';$('uPass').autocomplete=m==='login'?'current-password':'new-password'}
+/* Mode Masuk: hanya sandi. Mode Daftar: nama + sandi + ulangi sandi. */
+function setMode(m){mode=m;$('tLogin').classList.toggle('on',m==='login');$('tReg').classList.toggle('on',m==='reg');$('tInd').style.transform=m==='reg'?'translateX(100%)':'none';$('lName').hidden=m==='login';$('lPass2').hidden=m==='login';$('aGo').textContent=m==='login'?'Masuk':'Buat akun';$('aerr').textContent='';$('uPass').autocomplete=m==='login'?'current-password':'new-password'}
 function aerr(t){$('aerr').textContent=t;const c=$('aform');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}
 async function go(){
-  const raw=$('uName').value.trim(),n=raw.toLowerCase(),p=$('uPass').value,U=getU();
-  if(!n||!p)return aerr('Isi nama dan sandi dulu');
+  const raw=$('uName').value.trim(),p=$('uPass').value,U=getU();
+  let n=raw.toLowerCase();
+  if(!p||(mode==='reg'&&!n))return aerr(mode==='reg'?'Isi nama dan sandi dulu':'Isi sandi dulu');
   $('aGo').classList.add('load');
   try{
     if(mode==='reg'){
       if(p.length<4)return aerr('Sandi minimal 4 karakter');
       if(p!==$('uPass2').value)return aerr('Ulangi sandi tidak sama');
-      if(U[n])return aerr('Nama sudah dipakai, coba masuk');
+      if(U[n])return aerr('Nama sudah dipakai, pakai nama lain');
+      /* Karena masuk hanya dengan sandi, sandi harus unik antar akun */
+      for(const k in U){if(await hash(p,U[k].salt)===U[k].h)return aerr('Sandi ini sudah dipakai akun lain, pilih sandi berbeda')}
       const salt=Math.random().toString(36).slice(2);U[n]={salt,h:await hash(p,salt),name:raw};
       try{localStorage.setItem(UK,JSON.stringify(U));if(Object.keys(U).length===1){const old=localStorage.getItem(BASE);if(old)localStorage.setItem(BASE+'-'+n,old)}}catch(e){}
-    }else if(!U[n]||await hash(p,U[n].salt)!==U[n].h)return aerr('Nama atau sandi salah');
+    }else{
+      n=null;
+      for(const k in U){if(await hash(p,U[k].salt)===U[k].h){n=k;break}}
+      if(!n)return aerr('Sandi salah');
+    }
     enter(n,U[n].name||n);
   }finally{$('aGo').classList.remove('load')}
 }
