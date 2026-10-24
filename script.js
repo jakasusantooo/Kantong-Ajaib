@@ -264,14 +264,15 @@ $('print').onclick=()=>window.print();
 
 
 function ask(title,fields){return new Promise(res=>{const m=document.createElement('div');m.className='mdl';
-  m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2>${fields.map((f,i)=>`<label>${esc(f.label)}<input data-i="${i}" value="${esc(f.val||'')}" ${f.num?'inputmode="numeric"':''} ${f.pw?'type="password" autocomplete="off"':''}></label>`).join('')}<div class="mact"><button class="ghost" data-a="0">Batal</button><button class="btn" data-a="1">Simpan</button></div></div>`;
-  document.body.appendChild(m);const ins=[...m.querySelectorAll('input')];
+  m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2>${fields.map((f,i)=>`<label>${esc(f.label)}${f.opts?`<select data-i="${i}" style="margin-top:6px">${f.opts.map(o=>`<option${o===f.val?' selected':''}>${esc(o)}</option>`).join('')}</select>`:`<input data-i="${i}" value="${esc(f.val||'')}" ${f.num?'inputmode="numeric"':''} ${f.pw?'type="password" autocomplete="off"':''}>`}</label>`).join('')}<div class="mact"><button class="ghost" data-a="0">Batal</button><button class="btn" data-a="1">Simpan</button></div></div>`;
+  document.body.appendChild(m);const ins=[...m.querySelectorAll('input,select')];
   ins.forEach((e,i)=>{if(fields[i].num)e.addEventListener('input',()=>fmtIn(e));e.addEventListener('keydown',ev=>{if(ev.key==='Enter')done(1);if(ev.key==='Escape')done(0)})});ins[0].focus();
   function done(ok){const r=ok?ins.map(e=>e.value.trim()):null;m.remove();res(r)}
   m.onclick=e=>{const a=e.target.dataset.a;if(a!==undefined)done(+a);else if(e.target===m)done(0)}})}
 async function editTx(id){const t=S.tx.find(x=>x.id===id);if(!t)return;
-  const r=await ask('Ubah transaksi',[{label:'Nominal (Rp)',val:t.amount.toLocaleString('id-ID'),num:1},{label:'Catatan',val:t.note||''},{label:'Tanggal (TTTT-BB-HH)',val:t.date}]);if(!r)return;
-  const a=num(r[0]);if(!a){toast('Nominal tidak valid');return}t.amount=a;t.note=r[1];if(/^\d{4}-\d{2}-\d{2}$/.test(r[2]))t.date=r[2];save();render();toast('Transaksi diubah')}
+  const names=(t.type==='in'?IN:OUT).map(c=>c[1]);if(!names.includes(t.cat))names.unshift(t.cat);
+  const r=await ask('Ubah transaksi',[{label:'Nominal (Rp)',val:t.amount.toLocaleString('id-ID'),num:1},{label:'Kategori',val:t.cat,opts:names},{label:'Catatan',val:t.note||''},{label:'Tanggal (TTTT-BB-HH)',val:t.date}]);if(!r)return;
+  const a=num(r[0]);if(!a){toast('Nominal tidak valid');return}t.amount=a;t.cat=r[1]||t.cat;t.note=r[2];if(/^\d{4}-\d{2}-\d{2}$/.test(r[3]))t.date=r[3];save();render();toast('Transaksi diubah')}
 
 const TIPS=['Bayar dirimu dulu: sisihkan tabungan di awal bulan, bukan dari sisa.','Aturan 24 jam: tunda belanja impulsif sehari, banyak yang batal dibeli.','Dana darurat idealnya 3 sampai 6 kali pengeluaran bulanan.','Catat pengeluaran kecil. Kopi harian bisa jadi jutaan sebulan.','Pecah target besar jadi cicilan tabungan mingguan supaya ringan.','Utang dengan bunga tinggi dilunasi lebih dulu daripada menabung banyak.','Bandingkan harga di 3 toko sebelum membeli barang di atas Rp500.000.','Tinjau anggaran tiap akhir bulan dan sesuaikan untuk bulan depan.'];
 let tipI=0;
